@@ -517,7 +517,7 @@ if not opt.testing:
             best_result['iter'] = i
             best_result['vp'], best_result['vr'], best_result['vf1'], best_result['vcp'], best_result['vcr'], best_result['vcf1'], best_result['vce'] = p_val, r_val, f_val, cp_val, cr_val, cf_val, loss_val
             best_result['tp'], best_result['tr'], best_result['tf1'], best_result['tcp'], best_result['tcr'], best_result['tcf1'], best_result['tce'] = p_te, r_te, f_te, cp_te, cr_te, cf_te, loss_te
-    logger.info('BEST RESULT: \tEpoch : %d\tbest valid (Loss: (%.2f, %.2f) P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f)\tbest test (Loss: (%.2f, %.2f) P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f) ' % (best_result['iter'], best_result['vce'][0], best_result['vce'][1], best_result['vp'], best_result['vr'], best_result['vf1'], best_result['vcp'], best_result['vcr'], best_result['vcf1'], best_result['tce'][0], best_result['tce'][1], best_result['tp'], best_result['tr'], best_result['tf1'], best_result['tcp'], best_result['tcr'], best_result['tcf1']))
+    logger.info('BEST RESULT: \tEpoch : %d\tbest valid P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f)\tbest test P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f) ' % (best_result['iter'], best_result['vp'], best_result['vr'], best_result['vf1'], best_result['vcp'], best_result['vcr'], best_result['vcf1'], best_result['tp'], best_result['tr'], best_result['tf1'], best_result['tcp'], best_result['tcr'], best_result['tcf1']))
 else:    
     logger.info("Testing starts at %s" % (time.asctime(time.localtime(time.time()))))
     model_tag.eval()

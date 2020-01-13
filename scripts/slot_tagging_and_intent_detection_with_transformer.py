@@ -416,9 +416,14 @@ def decode(data_feats, data_tags, data_class, output_path):
         p, r, f = 0, 0, 0
     else:
         p, r, f = 100*TP/(TP+FP), 100*TP/(TP+FN), 100*2*TP/(2*TP+FN+FP)
+
+    if TP == 0:
+        cp, cr, cf = 0, 0, 0
+    else:
+        cp, cr, cf = 100*TP2/(TP2+FP2), 100*TP2/(TP2+FN2), 100*2*TP2/(2*TP2+FN2+FP2)
     
     mean_losses = np.mean(losses, axis=0)
-    return mean_losses, p, r, f, 0 if 2*TP2+FN2+FP2 == 0 else 100*2*TP2/(2*TP2+FN2+FP2)
+    return mean_losses, p, r, f, cp, cr, cf
 
 if not opt.testing:
     logger.info("Training starts at %s" % (time.asctime(time.localtime(time.time()))))
@@ -492,11 +497,11 @@ if not opt.testing:
             model_class.eval()
         # Evaluation
         start_time = time.time()
-        loss_val, p_val, r_val, f_val, cf_val = decode(valid_feats['data'], valid_tags['data'], valid_class['data'], os.path.join(exp_path, 'valid.iter'+str(i)))
-        logger.info('Validation:\tEpoch : %d\tTime : %.4fs\tLoss : (%.2f, %.2f)\tFscore : %.2f\tcls-F1 : %.2f ' % (i, time.time() - start_time, loss_val[0], loss_val[1], f_val, cf_val))
+        loss_val, p_val, r_val, f_val, cp_val, cr_val, cf_val = decode(valid_feats['data'], valid_tags['data'], valid_class['data'], os.path.join(exp_path, 'valid.iter'+str(i)))
+        logger.info('Validation:\tEpoch : %d\tTime : %.4fs\tLoss : (%.2f, %.2f)\tP: %.2f, R: %.2f, Fscore : %.2f\tcls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f ' % (i, time.time() - start_time, loss_val[0], loss_val[1], p_val, r_val, f_val, cp_val, cr_val, cf_val))
         start_time = time.time()
-        loss_te, p_te, r_te, f_te, cf_te = decode(test_feats['data'], test_tags['data'], test_class['data'], os.path.join(exp_path, 'test.iter'+str(i)))
-        logger.info('Evaluation:\tEpoch : %d\tTime : %.4fs\tLoss : (%.2f, %.2f)\tFscore : %.2f\tcls-F1 : %.2f ' % (i, time.time() - start_time, loss_te[0], loss_te[1], f_te, cf_te))
+        loss_te, p_te, r_te, f_te, cp_te, cr_te, cf_te = decode(test_feats['data'], test_tags['data'], test_class['data'], os.path.join(exp_path, 'test.iter'+str(i)))
+        logger.info('Evaluation:\tEpoch : %d\tTime : %.4fs\tLoss : (%.2f, %.2f)\tP: %.2f, R: %.2f, Fscore : %.2f\tcls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f ' % (i, time.time() - start_time, loss_te[0], loss_te[1], p_te, r_te, f_te, cp_te, cr_te, cf_te))
 
         if opt.task_sc:
             val_f1_score = (opt.st_weight * f_val + (1 - opt.st_weight) * cf_val)
@@ -507,19 +512,19 @@ if not opt.testing:
             if opt.task_sc:
                 model_class.save_model(os.path.join(exp_path, opt.save_model+'.class'))
             best_f1 = val_f1_score
-            logger.info('NEW BEST:\tEpoch : %d\tbest valid F1 : %.2f, cls-F1 : %.2f;\ttest F1 : %.2f, cls-F1 : %.2f' % (i, f_val, cf_val, f_te, cf_te))
+            logger.info('NEW BEST:\tEpoch : %d\tbest valid P: %.2f, R: %.2f, F1 : %.2f, cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f;\ttest P: %.2f, R: %.2f, F1 : %.2f, cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f' % (i, p_val, r_val, f_val, cp_val, cr_val, cf_val, p_te, r_te, f_te, cp_te, cr_te, cf_te))
             best_result['iter'] = i
-            best_result['vf1'], best_result['vcf1'], best_result['vce'] = f_val, cf_val, loss_val
-            best_result['tf1'], best_result['tcf1'], best_result['tce'] = f_te, cf_te, loss_te
-    logger.info('BEST RESULT: \tEpoch : %d\tbest valid (Loss: (%.2f, %.2f) F1 : %.2f cls-F1 : %.2f)\tbest test (Loss: (%.2f, %.2f) F1 : %.2f cls-F1 : %.2f) ' % (best_result['iter'], best_result['vce'][0], best_result['vce'][1], best_result['vf1'], best_result['vcf1'], best_result['tce'][0], best_result['tce'][1], best_result['tf1'], best_result['tcf1']))
+            best_result['vp'], best_result['vr'], best_result['vf1'], best_result['vcp'], best_result['vcr'], best_result['vcf1'], best_result['vce'] = p_val, r_val, f_val, cp_val, cr_val, cf_val, loss_val
+            best_result['tp'], best_result['tr'], best_result['tf1'], best_result['tcp'], best_result['tcr'], best_result['tcf1'], best_result['tce'] = p_te, r_te, f_te, cp_te, cr_te, cf_te, loss_te
+    logger.info('BEST RESULT: \tEpoch : %d\tbest valid P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f)\tbest test P: %.2f, R: %.2f, F1 : %.2f; cls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f) ' % (best_result['iter'], best_result['vp'], best_result['vr'], best_result['vf1'], best_result['vcp'], best_result['vcr'], best_result['vcf1'], best_result['tp'], best_result['tr'], best_result['tf1'], best_result['tcp'], best_result['tcr'], best_result['tcf1']))
 else:    
     logger.info("Testing starts at %s" % (time.asctime(time.localtime(time.time()))))
     model_tag.eval()
     if opt.task_sc:
         model_class.eval()
     start_time = time.time()
-    loss_val, p_val, r_val, f_val, cf_val = decode(valid_feats['data'], valid_tags['data'], valid_class['data'], os.path.join(exp_path, 'valid.eval'))
-    logger.info('Validation:\tTime : %.4fs\tLoss : (%.2f, %.2f)\tFscore : %.2f\tcls-F1 : %.2f ' % (time.time() - start_time, loss_val[0], loss_val[1], f_val, cf_val))
+    loss_val, p_val, r_val, f_val, cp_val, cr_val, cf_val = decode(valid_feats['data'], valid_tags['data'], valid_class['data'], os.path.join(exp_path, 'valid.eval'))
+    logger.info('Validation:\tTime : %.4fs\tLoss : (%.2f, %.2f)\tP: %.2f, R: %.2f, Fscore : %.2f\tcls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f ' % (time.time() - start_time, loss_val[0], loss_val[1], f_val, cf_val))
     start_time = time.time()
-    loss_te, p_te, r_te, f_te, cf_te = decode(test_feats['data'], test_tags['data'], test_class['data'], os.path.join(exp_path, 'test.eval'))
-    logger.info('Evaluation:\tTime : %.4fs\tLoss : (%.2f, %.2f)\tFscore : %.2f\tcls-F1 : %.2f ' % (time.time() - start_time, loss_te[0], loss_te[1], f_te, cf_te))
+    loss_te, p_te, r_te, f_te, cp_te, cr_te, cf_te = decode(test_feats['data'], test_tags['data'], test_class['data'], os.path.join(exp_path, 'test.eval'))
+    logger.info('Evaluation:\tTime : %.4fs\tLoss : (%.2f, %.2f)\tP: %.2f, R: %.2f, Fscore : %.2f\tcls-P: %.2f, cls-R: %.2f, cls-F1 : %.2f ' % (time.time() - start_time, loss_te[0], loss_te[1], f_te, cf_te))
