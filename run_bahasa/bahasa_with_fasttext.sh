@@ -14,7 +14,7 @@ fix_word2vec_inText=false
 word_digit_features=false #false, true
 
 dataroot=data/bahasa/$1
-dataset=data_bahasa_fasttext_$1
+dataset=bahasa_fasttext_$1
 
 word_embedding_size=300 #400 #1024
 lstm_hidden_size=200

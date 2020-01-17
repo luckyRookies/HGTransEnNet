@@ -14,20 +14,20 @@ fix_word2vec_inText=false
 word_digit_features=false #false, true
 
 dataroot=data/bahasa/$1
-dataset=bahasa
+dataset=bahasa_$1
 
 word_embedding_size=1024 #400 #1024
 lstm_hidden_size=200
 lstm_layers=1
 slot_tag_embedding_size=100  ## for slot_tagger_with_focus
-batch_size=20
+batch_size=32
 
 optimizer=adam
 learning_rate=0.001
 max_norm_of_gradient_clip=5
 dropout_rate=0.5
 
-max_epoch=50
+max_epoch=40
 
 device=0
 # device=0 means auto-choosing a GPU

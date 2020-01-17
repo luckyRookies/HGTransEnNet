@@ -1,0 +1,36 @@
+.
+├── attraction
+│   ├── ba_sentences.txt
+│   ├── en_ba_sen_nums_metadata.npy
+│   ├── en_sentences_bert_embedding.jsonl
+│   ├── en_sentences.txt
+│   ├── H.npy
+│   ├── X_1d.npy
+│   └── X_2d.npy
+├── en_bert_feature_extract.py
+├── hotel
+│   ├── ba_sentences.txt
+│   ├── en_ba_sen_nums_metadata.npy
+│   ├── en_sentences_bert_embedding.jsonl
+│   ├── en_sentences.txt
+│   ├── H.npy
+│   ├── X_1d.npy
+│   └── X_2d.npy
+├── restaurant
+│   ├── ba_sentences.txt
+│   ├── en_ba_sen_nums_metadata.npy
+│   ├── en_sentences_bert_embedding.jsonl
+│   ├── en_sentences.txt
+│   ├── H.npy
+│   ├── X_1d.npy
+│   └── X_2d.npy
+└── taxi
+    ├── ba_sentences.txt
+    ├── en_ba_sen_nums_metadata.npy
+    ├── en_sentences_bert_embedding.jsonl
+    ├── en_sentences.txt
+    ├── H.npy
+    ├── X_1d.npy
+    └── X_2d.npy
+
+4 directories, 29 files

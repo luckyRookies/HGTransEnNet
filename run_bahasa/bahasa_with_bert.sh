@@ -10,7 +10,7 @@ pretrained_model_type=bert
 pretrained_model_name=bert-base-multilingual-cased #bert-base-cased #bert-large-uncased-whole-word-masking #bert-base-uncased
 
 dataroot=data/bahasa/$1
-dataset=bahasa_$1
+dataset=bahasa_bert_$1
 
 lstm_hidden_size=200 # 100, 200
 lstm_layers=1
@@ -22,7 +22,7 @@ learning_rate=5e-5 # 1e-5, 5e-5, 1e-4, 1e-3
 max_norm_of_gradient_clip=1 # working for adamw
 dropout_rate=0.1 # 0.1, 0.5
 
-max_epoch=40
+max_epoch=30
 
 device=0
 # device=0 means auto-choosing a GPU
