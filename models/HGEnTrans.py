@@ -89,7 +89,7 @@ def main(learning_rate=0.001, epoch=100):
                     edge_indices.append(j)
         return torch.LongTensor([node_indices, edge_indices])
 
-    d = '/users6/kyzhang/tk/bert/HG_data/attraction'
+    d = '/users6/kyzhang/tk/bert/HG_data/restaurant'
     H_all = np.load(os.path.join(d, 'H.npy'))
     en_ba_dim = np.load(os.path.join(d, 'en_ba_sen_nums_metadata.npy'))
     X_1d = np.load(os.path.join(d, 'X_1d.npy'))
@@ -117,7 +117,7 @@ def main(learning_rate=0.001, epoch=100):
     model = HGEnTrans(in_ft, n_class_c, hiddens=(8,))
     model = model.to(device)
     # model = HGEnTrans()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.020)
 
     # scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.5)
 
@@ -140,15 +140,20 @@ def main(learning_rate=0.001, epoch=100):
         return _train_acc  # , _val_acc
 
     best_acc, best_iou = 0.0, 0.0
-    for epoch in range(1, 100):
+    for epoch in range(1, 110):
         train()
         # train_acc, val_acc = val()
         train_acc = val()
         # scheduler.step()
-        print('learning rate:', optimizer.state_dict()['param_groups'][0]['lr'])
-        # if val_acc > best_acc:
-        #     best_acc = val_acc
+        # print('learning rate:', optimizer.state_dict()['param_groups'][0]['lr'])
+        if train_acc > best_acc:
+            best_acc = train_acc
         print(f'Epoch: {epoch}, Train:{train_acc:.4f}')
+
+    if train_acc > 0.93:
+        np.save(os.path.join(d, 'ba_sen_emb_by_HG.npy'), torch.Tensor.cpu(ft).numpy()[en_nums:])
+    else:
+        print('acc too low!')
 
 
 if __name__ == '__main__':
