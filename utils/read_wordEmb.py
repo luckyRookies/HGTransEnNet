@@ -1,5 +1,6 @@
 """Data utilities."""
 import torch
+import numpy as np
 
 def read_word2vec_inText(file_path, device):
     with open(file_path, 'r') as f:
@@ -17,3 +18,9 @@ def read_word2vec_inText(file_path, device):
             embedding[idx] = vector
     embedding = torch.tensor(embedding, dtype=torch.float, device=device)
     return word_to_idx, embedding
+
+
+def read_sen2vec_inText(file_path, device):
+    sen2embs = np.load(file_path)
+    embedding = torch.tensor(sen2embs, dtype=torch.float, device=device)
+    return embedding

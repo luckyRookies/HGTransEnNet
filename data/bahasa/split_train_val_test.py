@@ -1,10 +1,9 @@
 
 import os
 import random
-random.seed(2020)
 
 if __name__ == '__main__':
-    dir_list = ['attraction', 'hotel', 'taxi', 'restaurant']
+    dir_list = ['hotel', 'attraction', 'taxi', 'restaurant', 'hospital', 'movie', 'plane', 'police', 'wear']
     train_per, valid_per, test_per = 0.8, 0.9, 1
     for d in dir_list:
         train, valid, test = [], [], []

@@ -3,6 +3,7 @@ import torch
 import operator
 import json
 import random
+import numpy as np
 
 def read_seqtag_data_with_class(data_path, word2idx, tag2idx, class2idx, separator=':', multiClass=False, keep_order=False, lowercase=False):
     '''
@@ -15,8 +16,8 @@ def read_seqtag_data_with_class(data_path, word2idx, tag2idx, class2idx, separat
         5. multiClass: multiple classifiers
         6. keep_order: keep a track of the line number
     @return:
-        1. input features 
-        2. tag labels 
+        1. input features
+        2. tag labels
         3. class labels
     '''
     print('Reading source data ...')
@@ -70,7 +71,7 @@ def get_minibatch_with_class(input_seqs, tag_seqs, class_labels, word2idx, tag2i
         tag_seqs = [[tag2idx['O']] + line + [tag2idx['O']] for line in tag_seqs]
     else:
         pass
-    
+
     data_mb = list(zip(input_seqs, tag_seqs, class_labels))
     data_mb.sort(key=lambda x: len(x[0]), reverse=True)   # sorted for pad setence
 
@@ -99,7 +100,7 @@ def get_minibatch_with_class(input_seqs, tag_seqs, class_labels, word2idx, tag2i
             for _,seq,_ in data_mb
             ]
     tag_idxs = torch.tensor(tag_idxs, dtype=torch.long, device=device)
-    
+
     if multiClass:
         raw_classes = [class_list for _,_,class_list in data_mb]
         class_tensor = torch.zeros(len(data_mb), len(class2idx), dtype=torch.float)
@@ -118,3 +119,41 @@ def get_minibatch_with_class(input_seqs, tag_seqs, class_labels, word2idx, tag2i
 
     return ret
 
+
+def read_sen_bank(data_path):
+    with open(data_path, 'r', encoding='utf8') as f:
+        sen2idx = {}
+        i = 0
+        for line in f:
+            if line.strip() == '':
+                # print('empty line...')
+                continue
+            sen2idx[line.strip()] = i
+            i += 1
+    return sen2idx
+
+def read_sen_feats(data_path, sen_bank, separator=':'):
+    sen_seqs = []
+    with open(data_path, 'r') as f:
+        line_num = -1
+        for ind, line in enumerate(f):
+            line_num += 1
+            slot_tag_line, class_name = line.strip('\n\r').split(' <=> ')
+            if slot_tag_line == "":
+                continue
+
+            tokens = []
+            for item in slot_tag_line.split(' '):
+                tmp = item.split(separator)
+                assert len(tmp) >= 2
+                word, tag = separator.join(tmp[:-1]), tmp[-1]
+                tokens.append(word)
+            raw_sen = ' '.join(tokens)
+            sen_idx = sen_bank[raw_sen]
+            sen_seqs.append(sen_idx)
+    return sen_seqs
+
+
+def get_sen_minibatch(input_sen_feats, train_data_indx, index, batch_size, device=None):
+    input_sens = [input_sen_feats[idx] for idx in train_data_indx[index:index + batch_size]]
+    return torch.tensor(input_sens, dtype=torch.long, device=device)

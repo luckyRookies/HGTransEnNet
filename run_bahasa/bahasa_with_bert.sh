@@ -9,8 +9,8 @@ balance_weight=0.5
 pretrained_model_type=bert
 pretrained_model_name=bert-base-multilingual-cased #bert-base-cased #bert-large-uncased-whole-word-masking #bert-base-uncased
 
-dataroot=data/bahasa/$1
-dataset=bahasa_bert_$1
+dataroot=data/bahasa_both/$1
+dataset=bahasa_both_bert_$1
 
 lstm_hidden_size=200 # 100, 200
 lstm_layers=1
