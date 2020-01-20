@@ -8,11 +8,17 @@ logging.basicConfig(level=logging.INFO)#,format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 
 def format_data():
-    dir_list = ['hotel'] # ['hotel', 'attraction', 'taxi', 'restaurant']
+    # bahasa
+    # dir_list = ['hotel', 'attraction', 'taxi', 'restaurant']
+    # data_dir = '../../bert/HG_data'
+    # HG_emb_file = 'ba_sen_emb_by_HG.npy'
+    # sen_file = 'ba_sentences.txt'
+
+    # english
+    dir_list = ['hotel']
     data_dir = '../../bert/HG_data'
     HG_emb_file = 'ba_sen_emb_by_HG.npy'
     sen_file = 'ba_sentences.txt'
-
 
     for d in dir_list:
 

@@ -2,7 +2,7 @@
 
 source ./path.sh
 
-task_slot_filling=slot_tagger_with_crf #slot_tagger, slot_tagger_with_crf, slot_tagger_with_focus
+task_slot_filling=slot_tagger #slot_tagger, slot_tagger_with_crf, slot_tagger_with_focus
 task_intent_detection=hiddenAttention # none, hiddenAttention, hiddenCNN, maxPooling, 2tails
 balance_weight=0.5
 
