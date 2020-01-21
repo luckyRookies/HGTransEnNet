@@ -10,7 +10,7 @@ from torch import nn
 from hyconv import HyConv
 
 
-class HGEnTrans(nn.Module):
+class HGTransEnNet(nn.Module):
     def __init__(self, in_ch, n_class, hiddens=(16,), dropout=0.5) -> None:
         super().__init__()
         self.dropout = dropout
@@ -114,7 +114,7 @@ def main(learning_rate=0.001, epoch=100):
     # construct model
     n_class_c = i + 1
     in_ft = ft.size(1)
-    model = HGEnTrans(in_ft, n_class_c, hiddens=(8,))
+    model = HGTransEnNet(in_ft, n_class_c, hiddens=(8,))
     model = model.to(device)
     # model = HGEnTrans()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.020)
