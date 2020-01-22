@@ -26,7 +26,7 @@
     python data_processing/en_bert_feature_extract.py
  ``` 
 
- then run
+ then train HGTransEnNet and extract corresponding word embeddings
     
  ```sh
     python scripts/train_HGTransEnNet.py
