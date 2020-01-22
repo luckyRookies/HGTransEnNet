@@ -39,7 +39,3 @@ As we can know from the datasets, ATIS may have multiple intents for one utteran
     sh run_bahasa/bahasa_with_word_mebedding_by_HG.py domain_name
  ```
 
-
-
-## Reference
- * Su Zhu and Kai Yu, "Encoder-decoder with focus-mechanism for sequence labelling based spoken language understanding," in IEEE International Conference on Acoustics, Speech and Signal Processing(ICASSP), 2017, pp. 5675-5679.
