@@ -140,6 +140,11 @@ def overall_distance(word_embeddings):
     # print(ds)
     return np.average(ds)
 
+def get_center(word_embeddings):
+    word_embeddings = np.array(word_embeddings)
+    c = np.average(word_embeddings, axis=0)
+    return c
+
 def main2_bert_word_embedding_distance():
     domain_list = ['taxi']  # , 'attraction', 'taxi', 'restaurant']
     data_dir = '../../bert/HG_data'
@@ -174,9 +179,11 @@ def main2_bert_word_embedding_distance():
                     word_embeddings[t].append(word_emb)
                 # pbar.update(1)
             # pbar.close()
-        word_list = ['black', 'white']
+        word_list = ['pick', 'take']
         for w in word_list:
             print('word: {}, overall distance: {}'.format(w, overall_distance(word_embeddings[w])))
+            # print('word: {}, overall distance: {}'.format(w, get_center(word_embeddings[w]).shape))
+        print(overall_distance([get_center(word_embeddings[word_list[0]]), get_center(word_embeddings[word_list[1]])]))
 
 
 def random_word2vec(sentences, sens_len, word_emb_d=768, max_len=76):
